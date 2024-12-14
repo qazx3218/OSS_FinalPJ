@@ -1,25 +1,21 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Default() {
-
-    let defaultList = [];
+    const [tempList, setTempList] = useState([]);
     const navigate = useNavigate();
 
-    const [tempList, setTempList] = useState(defaultList);
-
-    if (tempList.length === 0) {
+    useEffect(() => {
         axios.get("https://672818a9270bd0b975544f25.mockapi.io/api/v1/finalproject")
             .then((response) => {
                 console.log(JSON.stringify(response.data));
-                setTempList(response.data)
+                setTempList(response.data);
             })
             .catch((error) => {
                 console.log(error);
-            })
-    }
+            });
+    }, []); 
 
     const goDetail = (id) => {
         navigate(`/detail/${id}`);
@@ -30,6 +26,7 @@ export default function Default() {
             <div style={{ textAlign: 'center', margin: '90px 0' }}>
                 <img src="/logo.png" alt="로고" style={{ width: '350px', height: 'auto' }} />
             </div>
+
             <div className="buttonbox">
                 <Link to="/WaterMeasurePage" className="button">수질 측정 정보 보기!</Link>
             </div>
@@ -44,7 +41,7 @@ export default function Default() {
                 </thead>
                 <tbody>
                     {tempList.map((each) => (
-                        <tr key={each.id} onClick={() => goDetail(each.id)}>
+                        <tr key={each.id} onClick={() => goDetail(each.id)} style={{ cursor: 'pointer' }}>
                             <td>{each.name}</td>
                             <td>{each.saleprice}</td>
                             <td>{each.dtime}</td>
@@ -56,9 +53,6 @@ export default function Default() {
             <div className="linking">
                 <Link to="/manage" className="link">매니저모드</Link>
             </div>
-
-
         </>
-
-    )
+    );
 }
